@@ -1,85 +1,100 @@
-const nameInput = document.getElementById("my-name-input");
-const myMessage = document.getElementById("my-message");
-const sendButton = document.getElementById("send-button");
-const chatBox = document.getElementById("chat");
-const serverURL = `https://it3049c-chat.fly.dev/messages`;
+document.addEventListener('DOMContentLoaded', () => {
+    const nameInput = document.getElementById('my-name-input');
+    const messageInput = document.getElementById('my-message');
+    const saveButton = document.getElementById('save-button');
+    const modifyButton = document.getElementById('modify-button');
+    const sendButton = document.getElementById('send-button');
+    const chatBox = document.getElementById('chat');
+    const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
 
-// Function to fetch messages from the server
-function fetchMessages() {
-    return fetch(serverURL)
-        .then(response => response.json());
-}
-
-// Function to format messages
-function formatMessage(message, myNameInput) {
-    const time = new Date(message.timestamp);
-    const formattedTime = `${time.getHours()}:${time.getMinutes()}`;
-
-    if (myNameInput === message.sender) {
-        return `
-        <div class="mine messages">
-            <div class="message">
-                ${message.text}
-            </div>
-            <div class="sender-info">
-                ${formattedTime}
-            </div>
-        </div>
-        `;
-    } else {
-        return `
-        <div class="yours messages">
-            <div class="message">
-                ${message.text}
-            </div>
-            <div class="sender-info">
-                ${message.sender} ${formattedTime}
-            </div>
-        </div>
-        `;
+    // Check if name is already saved in localStorage
+    const savedName = localStorage.getItem('username');
+    if (savedName) {
+        nameInput.value = savedName;
+        messageInput.removeAttribute('disabled');
     }
-}
 
-// Function to update messages in the chat box
-async function updateMessages() {
-    const messages = await fetchMessages();
-    let formattedMessages = "";
-    messages.forEach(message => {
-        formattedMessages += formatMessage(message, nameInput.value);
+    // Event listener for Save button
+    saveButton.addEventListener('click', () => {
+        const newName = nameInput.value.trim();
+        if (newName) {
+            localStorage.setItem('username', newName);
+            messageInput.removeAttribute('disabled');
+        } else {
+            alert('Please enter a valid name.');
+        }
     });
-    chatBox.innerHTML = formattedMessages;
-}
 
-// Call updateMessages function every 10 seconds
-const MILLISECONDS_IN_TEN_SECONDS = 10000;
-setInterval(updateMessages, MILLISECONDS_IN_TEN_SECONDS);
-
-// Function to send messages
-function sendMessages(username, text) {
-    const newMessage = {
-        sender: username,
-        text: text,
-        timestamp: new Date().getTime()
-    };
-
-    fetch(serverURL, {
-        method: `POST`,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newMessage)
+    // Event listener for Modify button
+    modifyButton.addEventListener('click', () => {
+        localStorage.removeItem('username');
+        nameInput.value = '';
+        messageInput.setAttribute('disabled', true);
     });
-}
 
-// Event listener for the send button
-sendButton.addEventListener("click", function (sendButtonClickEvent) {
-    sendButtonClickEvent.preventDefault();
-    const sender = nameInput.value;
-    const message = myMessage.value;
+    // Event listener for Send button
+    sendButton.addEventListener('click', () => {
+        const sender = nameInput.value;
+        const message = messageInput.value;
+        sendMessage(sender, message);
+        messageInput.value = '';
+    });
 
-    sendMessages(sender, message);
-    myMessage.value = "";
+    // Event listener for Dark Mode toggle button
+    toggleDarkModeButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+
+        // Save dark mode preference to localStorage
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('dark-mode', JSON.stringify(isDarkMode));
+    });
+
+    // Check dark mode preference from localStorage
+    const savedDarkMode = JSON.parse(localStorage.getItem('dark-mode'));
+    if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Function to send message
+    function sendMessage(sender, message) {
+        const newMessage = {
+            sender: sender,
+            text: message,
+            timestamp: new Date().getTime()
+        };
+
+        // Example code to append message to chat box
+        const formattedMessage = formatMessage(newMessage, sender);
+        chatBox.innerHTML += formattedMessage;
+    }
+
+    // Function to format message based on sender
+    function formatMessage(message, myNameInput) {
+        const time = new Date(message.timestamp);
+        const formattedTime = `${time.getHours()}:${time.getMinutes()}`;
+
+        if (myNameInput === message.sender) {
+            return `
+            <div class="mine messages">
+                <div class="message">
+                    ${message.text}
+                </div>
+                <div class="sender-info">
+                    ${formattedTime}
+                </div>
+            </div>
+            `;
+        } else {
+            return `
+            <div class="yours messages">
+                <div class="message">
+                    ${message.text}
+                </div>
+                <div class="sender-info">
+                    ${message.sender} ${formattedTime}
+                </div>
+            </div>
+            `;
+        }
+    }
 });
-
-// Initial call to load messages
-updateMessages();
