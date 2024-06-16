@@ -1,43 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>IT3049 Chat</title>
-        <!-- Bootstrap + JQuery + FontAwesome -->
-        <link rel="stylesheet" href="resources/vendor/bootstrap.min.css" />
-        <script src="resources/vendor/jquery-3.5.1.slim.min.js"></script>
-        <script src="resources/vendor/popper.min.js"></script>
-        <script src="resources/vendor/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="resources/vendor/fontawesome-free/css/all.min.css" />
-        <link rel="stylesheet" href="resources/css/styles.css" />
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT3049 Chat</title>
+    <!-- Bootstrap + FontAwesome -->
+    <link rel="stylesheet" href="resources/vendor/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="resources/css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="jumbotron">
+            <h1 class="display-4">IT3049C Chat</h1>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fas fa-user"></i>
+                </span>
+            </div>
+            <input id="my-name-input" type="text" class="form-control" placeholder="Name">
+            <button id="save-button" class="btn btn-outline-primary ml-2">Save Name</button>
+            <button id="modify-button" class="btn btn-outline-secondary ml-2">Modify Name</button>
+        </div>
+    </header>
 
-    <body>
-        <header>
-            <div class="jumbotron">
-                <h1 class="display-4">IT-3049C Chat</h1>
+    <div id="chat">
+        <!-- Messages will be populated here -->
+    </div>
+    
+    <footer>
+        <div id="chatbar" class="input-group mb-3">
+            <input
+                type="text"
+                id="my-message"
+                class="form-control"
+                placeholder="Type a message ..."
+                disabled>
+            <div class="input-group-append">
+                <button
+                    class="btn btn-outline-primary"
+                    id="send-button"
+                    type="button">Send</button>
             </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fas fa-user"></i>
-                    </span>
-                </div>
-                <input id="my-name-input" type="text" class="form-control" placeholder="Name" value="Andrew Lively">
-            </div>
-        </header>
+        </div>
+    </footer>
 
-        <div id="chat"></div>
-        
-        <footer>
-            <div id="chatbar" class="input-group mb-3">
-                <input type="text" id="my-message" class="form-control" placeholder="Type a message ...">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-primary" id="send-button" type="button">Send</button>
-                </div>
-            </div>
-        </footer>
-        <script src="resources/js/index.js"></script>
-    </body>
+    <!-- Toggle Dark Mode Button -->
+    <button id="toggle-dark-mode" class="btn btn-outline-dark">Toggle Dark Mode</button>
+
+    <!-- Scripts -->
+    <script src="resources/vendor/jquery-3.5.1.slim.min.js"></script>
+    <script src="resources/vendor/popper.min.js"></script>
+    <script src="resources/vendor/bootstrap.min.js"></script>
+    <script src="resources/js/index.js"></script>
+</body>
 </html>
